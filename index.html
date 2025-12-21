@@ -321,7 +321,12 @@
         <!-- SECTION: INVENTORY -->
         <div id="section-inventory" class="hidden space-y-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-xl shadow-sm">
-                <input type="text" id="inventory-search" placeholder="Search products..." class="w-full md:w-96 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                <div class="relative w-full md:w-96">
+                    <input type="text" id="inventory-search" placeholder="Search products..." class="w-full px-4 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    <button type="button" onclick="clearTextInput('inventory-search')" class="absolute inset-y-0 right-2 my-auto text-gray-400 hover:text-red-500 text-sm" title="Clear">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
                 <p class="text-sm text-gray-500"><i class="fas fa-info-circle mr-1"></i> Add new products from the Purchases tab</p>
             </div>
 
@@ -357,10 +362,15 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Select Product</label>
                             <div class="relative">
-                                <input id="sale-product-search" type="text" placeholder="Search or select product" class="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 pr-9" oninput="filterProductDropdown()" autocomplete="off">
-                                <button type="button" id="sale-product-toggle" class="absolute inset-y-0 right-2 my-auto text-gray-400" onclick="toggleProductDropdown(event)">
-                                    <i class="fas fa-chevron-down text-xs"></i>
-                                </button>
+                                <input id="sale-product-search" type="text" placeholder="Search or select product" class="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 pr-20" oninput="filterProductDropdown()" autocomplete="off">
+                                <div class="absolute inset-y-0 right-2 my-auto flex items-center gap-1">
+                                    <button type="button" id="sale-product-clear" onclick="clearSaleProductSelection()" class="text-gray-400 hover:text-red-500 hidden" title="Clear">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <button type="button" id="sale-product-toggle" class="text-gray-400" onclick="toggleProductDropdown(event)">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </button>
+                                </div>
                                 <div id="sale-product-dropdown" class="dropdown-menu absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg hidden">
                                 </div>
                             </div>
@@ -383,18 +393,6 @@
                                 <input type="text" id="sale-item-total" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg bg-gray-100 font-bold text-gray-700" readonly>
                             </div>
                         </div>
-                        <!-- Private Profit Display -->
-                        <div id="sale-profit-preview" class="hidden bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-3">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <button type="button" onclick="toggleItemProfitVisibility()" class="text-green-600 hover:text-green-800" title="Show/Hide Profit">
-                                        <i id="item-profit-toggle-icon" class="fas fa-eye-slash text-sm"></i>
-                                    </button>
-                                    <span class="text-sm font-medium text-green-800">Est. Profit (Private)</span>
-                                </div>
-                                <span id="sale-item-profit" class="font-bold text-green-700">PKR 0</span>
-                            </div>
-                        </div>
                         <div class="grid grid-cols-2 gap-3">
                             <button onclick="addItemToCart()" class="py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
                                 <i class="fas fa-cart-plus mr-2"></i> Add to Cart
@@ -413,8 +411,11 @@
                             <h3 class="font-bold text-gray-800">Current Invoice</h3>
                             <span class="text-sm text-gray-500" id="invoice-date"></span>
                         </div>
-                        <div class="mt-3">
-                            <input type="text" id="pos-customer-name" placeholder="Customer Name (Optional)" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        <div class="mt-3 relative">
+                            <input type="text" id="pos-customer-name" placeholder="Customer Name (Optional)" class="w-full px-3 py-2 pr-8 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            <button type="button" onclick="clearTextInput('pos-customer-name')" class="absolute inset-y-0 right-2 my-auto text-gray-400 hover:text-red-500 text-xs" title="Clear">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="flex-1 overflow-y-auto p-4 space-y-3 max-h-64 lg:max-h-80" id="pos-cart-items">
@@ -433,24 +434,16 @@
                             <span class="font-bold text-gray-800">Total</span>
                             <span class="font-bold text-blue-600 text-xl" id="pos-total">PKR 0</span>
                         </div>
-                        <!-- Private Profit Summary -->
-                        <div id="pos-profit-summary" class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-2.5">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <button type="button" onclick="toggleProfitVisibility()" class="text-green-600 hover:text-green-800" title="Show/Hide Profit">
-                                        <i id="profit-toggle-icon" class="fas fa-eye-slash text-sm"></i>
-                                    </button>
-                                    <span class="text-xs font-medium text-green-800">Profit (Private)</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <span id="pos-cart-profit" class="font-bold text-green-700 text-sm hidden">PKR 0</span>
-                                    <span id="pos-cart-profit-hidden" class="font-bold text-green-700 text-sm">••••••</span>
-                                </div>
-                            </div>
-                        </div>
                         <button onclick="processSale()" class="w-full py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 shadow-lg transition-transform transform active:scale-95 flex justify-center items-center gap-2">
                             <i class="fas fa-check-circle"></i> CHECKOUT
                         </button>
+                        <!-- Secret Profit Toggle (After Checkout) -->
+                        <div id="pos-profit-toggle-container" class="border-t border-dashed border-gray-300 pt-2 hidden">
+                            <button onclick="toggleProfitVisibility()" class="w-full flex items-center justify-between px-2 py-1.5 text-xs text-gray-400 hover:text-green-600 transition-colors">
+                                <span id="profit-toggle-text">🔒 Show Sale Profit (Private)</span>
+                                <span id="last-sale-profit" class="font-mono font-bold hidden">PKR 0</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -466,15 +459,25 @@
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                         <div class="relative">
                             <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Search Keyword</label>
-                            <input type="text" id="sales-history-search" placeholder="Invoice # or Customer" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" oninput="renderSalesHistory()">
+                            <div class="relative">
+                                <input type="text" id="sales-history-search" placeholder="Invoice # or Customer" class="w-full px-3 py-2 pr-8 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" oninput="renderSalesHistory()">
+                                <button type="button" onclick="clearTextInput('sales-history-search')" class="absolute inset-y-0 right-2 my-auto text-gray-400 hover:text-red-500 text-xs" title="Clear">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="relative">
                             <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Filter by Product</label>
                             <div class="relative">
-                                <input type="text" id="sales-history-product-search" placeholder="Type to search products..." class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" oninput="filterSalesProductDropdown()" autocomplete="off">
-                                <button type="button" id="sales-history-product-toggle" class="absolute inset-y-0 right-2 my-auto text-gray-400" onclick="toggleSalesProductDropdown(event)">
-                                    <i class="fas fa-chevron-down text-xs"></i>
-                                </button>
+                                <input type="text" id="sales-history-product-search" placeholder="Type to search products..." class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 pr-20" oninput="filterSalesProductDropdown()" autocomplete="off">
+                                <div class="absolute inset-y-0 right-2 my-auto flex items-center gap-1">
+                                    <button type="button" id="sales-history-product-clear" onclick="clearSalesHistoryProductFilter()" class="text-gray-400 hover:text-red-500 hidden" title="Clear">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <button type="button" id="sales-history-product-toggle" class="text-gray-400" onclick="toggleSalesProductDropdown(event)">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </button>
+                                </div>
                                 <div id="sales-history-product-dropdown" class="dropdown-menu absolute z-[9999] mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg hidden"></div>
                             </div>
                             <input type="hidden" id="sales-history-product" value="">
@@ -489,10 +492,31 @@
                         </div>
                     </div>
                 </div>
+                <div class="p-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-2 text-sm text-gray-600">
+                            <input type="checkbox" id="sales-select-all" class="w-4 h-4 rounded" onchange="toggleSelectAll('sales')">
+                            <span>Select All</span>
+                        </label>
+                        <button onclick="deselectAll('sales')" class="text-sm text-gray-500 hover:text-gray-700 font-medium underline">
+                            <i class="fas fa-times-circle mr-1"></i> Deselect All
+                        </button>
+                        <span id="sales-selected-count" class="text-sm text-blue-600 font-medium">0 selected</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="deleteSelected('sales')" id="sales-delete-selected" class="px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i class="fas fa-trash mr-1"></i> Delete Selected
+                        </button>
+                        <button onclick="exportSelected('sales')" id="sales-export-selected" class="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i class="fas fa-download mr-1"></i> Export Selected
+                        </button>
+                    </div>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
+                                <th class="px-4 py-3 w-10"></th>
                                 <th class="px-4 py-3">Date/Time</th>
                                 <th class="px-4 py-3">Customer</th>
                                 <th class="px-4 py-3">Items</th>
@@ -519,18 +543,28 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Supplier Name</label>
-                            <input type="text" id="purchase-supplier" placeholder="Supplier name" class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none">
+                            <div class="relative">
+                                <input type="text" id="purchase-supplier" placeholder="Supplier name" class="w-full px-4 py-2 pr-8 border border-gray-300 rounded-lg outline-none">
+                                <button type="button" onclick="clearTextInput('purchase-supplier')" class="absolute inset-y-0 right-2 my-auto text-gray-400 hover:text-red-500 text-xs" title="Clear">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Select Product</label>
                         <div class="flex gap-2">
                             <div class="relative flex-1">
-                                <input id="purchase-product-search" type="text" placeholder="Search or select product" class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 pr-9" oninput="filterPurchaseProductDropdown()" autocomplete="off">
-                                <button type="button" id="purchase-product-toggle" class="absolute inset-y-0 right-2 my-auto text-gray-400" onclick="togglePurchaseProductDropdown(event)">
-                                    <i class="fas fa-chevron-down text-xs"></i>
-                                </button>
-                                <div id="purchase-product-dropdown" class="dropdown-menu absolute z-20 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg hidden">
+                                <input id="purchase-product-search" type="text" placeholder="Search or select product" class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 pr-20" oninput="filterPurchaseProductDropdown()" autocomplete="off">
+                                <div class="absolute inset-y-0 right-2 my-auto flex items-center gap-1">
+                                    <button type="button" id="purchase-product-clear" onclick="clearPurchaseProductSelection()" class="text-gray-400 hover:text-red-500 hidden" title="Clear">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <button type="button" id="purchase-product-toggle" class="text-gray-400" onclick="togglePurchaseProductDropdown(event)">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </button>
+                                </div>
+                                <div id="purchase-product-dropdown" class="dropdown-menu absolute z-[9999] mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg hidden">
                                 </div>
                             </div>
                             <button type="button" onclick="openProductModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shrink-0" title="Add New Product">
@@ -568,15 +602,25 @@
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                         <div>
                             <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Search Supplier</label>
-                            <input type="text" id="purchases-history-search" placeholder="Supplier Name" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" oninput="renderPurchases()">
+                            <div class="relative">
+                                <input type="text" id="purchases-history-search" placeholder="Supplier Name" class="w-full px-3 py-2 pr-8 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" oninput="renderPurchases()">
+                                <button type="button" onclick="clearTextInput('purchases-history-search')" class="absolute inset-y-0 right-2 my-auto text-gray-400 hover:text-red-500 text-xs" title="Clear">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="relative">
                             <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Filter by Product</label>
                             <div class="relative">
-                                <input type="text" id="purchases-history-product-search" placeholder="Type to search products..." class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" oninput="filterPurchaseProductDropdownForHistory()" autocomplete="off">
-                                <button type="button" id="purchases-history-product-toggle" class="absolute inset-y-0 right-2 my-auto text-gray-400" onclick="togglePurchaseProductDropdownForHistory(event)">
-                                    <i class="fas fa-chevron-down text-xs"></i>
-                                </button>
+                                <input type="text" id="purchases-history-product-search" placeholder="Type to search products..." class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 pr-20" oninput="filterPurchaseProductDropdownForHistory()" autocomplete="off">
+                                <div class="absolute inset-y-0 right-2 my-auto flex items-center gap-1">
+                                    <button type="button" id="purchases-history-product-clear" onclick="clearPurchaseHistoryProductFilter()" class="text-gray-400 hover:text-red-500 hidden" title="Clear">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <button type="button" id="purchases-history-product-toggle" class="text-gray-400" onclick="togglePurchaseProductDropdownForHistory(event)">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </button>
+                                </div>
                                 <div id="purchases-history-product-dropdown" class="dropdown-menu absolute z-[9999] mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg hidden"></div>
                             </div>
                             <input type="hidden" id="purchases-history-product" value="">
@@ -591,10 +635,31 @@
                         </div>
                     </div>
                 </div>
+                <div class="p-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-2 text-sm text-gray-600">
+                            <input type="checkbox" id="purchases-select-all" class="w-4 h-4 rounded" onchange="toggleSelectAll('purchases')">
+                            <span>Select All</span>
+                        </label>
+                        <button onclick="deselectAll('purchases')" class="text-sm text-gray-500 hover:text-gray-700 font-medium underline">
+                            <i class="fas fa-times-circle mr-1"></i> Deselect All
+                        </button>
+                        <span id="purchases-selected-count" class="text-sm text-blue-600 font-medium">0 selected</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="deleteSelected('purchases')" id="purchases-delete-selected" class="px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i class="fas fa-trash mr-1"></i> Delete Selected
+                        </button>
+                        <button onclick="exportSelected('purchases')" id="purchases-export-selected" class="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i class="fas fa-download mr-1"></i> Export Selected
+                        </button>
+                    </div>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
+                                <th class="px-4 py-3 w-10"></th>
                                 <th class="px-4 py-3">Date</th>
                                 <th class="px-4 py-3">Product</th>
                                 <th class="px-4 py-3">Supplier</th>
@@ -632,7 +697,12 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Description <span class="text-gray-400 text-xs">(Optional)</span></label>
-                        <input type="text" id="expense-desc" class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none" placeholder="e.g. Monthly rent payment">
+                        <div class="relative">
+                            <input type="text" id="expense-desc" class="w-full px-4 py-2 pr-8 border border-gray-300 rounded-lg outline-none" placeholder="e.g. Monthly rent payment">
+                            <button type="button" onclick="clearTextInput('expense-desc')" class="absolute inset-y-0 right-2 my-auto text-gray-400 hover:text-red-500 text-xs" title="Clear">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Amount (PKR)</label>
@@ -654,7 +724,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                         <div>
                             <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Search Description</label>
-                            <input type="text" id="expenses-history-search" placeholder="Description keyword" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" oninput="renderExpenses()">
+                            <div class="relative">
+                                <input type="text" id="expenses-history-search" placeholder="Description keyword" class="w-full px-3 py-2 pr-8 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" oninput="renderExpenses()">
+                                <button type="button" onclick="clearTextInput('expenses-history-search')" class="absolute inset-y-0 right-2 my-auto text-gray-400 hover:text-red-500 text-xs" title="Clear">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Filter Category</label>
@@ -672,10 +747,31 @@
                         </div>
                     </div>
                 </div>
+                <div class="p-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <label class="flex items-center gap-2 text-sm text-gray-600">
+                            <input type="checkbox" id="expenses-select-all" class="w-4 h-4 rounded" onchange="toggleSelectAll('expenses')">
+                            <span>Select All</span>
+                        </label>
+                        <button onclick="deselectAll('expenses')" class="text-sm text-gray-500 hover:text-gray-700 font-medium underline">
+                            <i class="fas fa-times-circle mr-1"></i> Deselect All
+                        </button>
+                        <span id="expenses-selected-count" class="text-sm text-blue-600 font-medium">0 selected</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="deleteSelected('expenses')" id="expenses-delete-selected" class="px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i class="fas fa-trash mr-1"></i> Delete Selected
+                        </button>
+                        <button onclick="exportSelected('expenses')" id="expenses-export-selected" class="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i class="fas fa-download mr-1"></i> Export Selected
+                        </button>
+                    </div>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
+                                <th class="px-4 py-3 w-10"></th>
                                 <th class="px-4 py-3">Date</th>
                                 <th class="px-4 py-3">Category</th>
                                 <th class="px-4 py-3">Description</th>
@@ -868,7 +964,12 @@
                 <input type="hidden" id="prod-id">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-                    <input type="text" id="prod-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none" required>
+                    <div class="relative">
+                        <input type="text" id="prod-name" class="w-full px-4 py-2 pr-8 border border-gray-300 rounded-lg outline-none" required>
+                        <button type="button" onclick="clearTextInput('prod-name')" class="absolute inset-y-0 right-2 my-auto text-gray-400 hover:text-red-500 text-xs" title="Clear">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Opening Stock <span class="text-gray-400 text-xs">(Optional)</span></label>
@@ -889,7 +990,12 @@
             <form id="category-form" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
-                    <input type="text" id="new-category-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none" placeholder="e.g. Marketing" required>
+                    <div class="relative">
+                        <input type="text" id="new-category-name" class="w-full px-4 py-2 pr-8 border border-gray-300 rounded-lg outline-none" placeholder="e.g. Marketing" required>
+                        <button type="button" onclick="clearTextInput('new-category-name')" class="absolute inset-y-0 right-2 my-auto text-gray-400 hover:text-red-500 text-xs" title="Clear">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="flex gap-3 pt-4">
                     <button type="button" onclick="closeCategoryModal()" class="flex-1 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
@@ -1220,7 +1326,13 @@
         const formatMoney = (amount) => 'PKR ' + parseFloat(amount || 0).toLocaleString('en-PK');
         const formatDate = (dateString) => new Date(dateString).toLocaleDateString('en-PK');
         const formatDateTime = (dateString) => new Date(dateString).toLocaleDateString('en-PK') + ' ' + new Date(dateString).toLocaleTimeString('en-PK', {hour: '2-digit', minute:'2-digit'});
-        const getTodayDate = () => new Date().toISOString().split('T')[0];
+        const getTodayDate = () => {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
         
         function updateSyncStatus(status, colorClass) {
             const el = document.getElementById('sync-status');
@@ -1562,6 +1674,16 @@
             const dropdown = document.getElementById('sale-product-dropdown');
             if (!dropdown) return;
             dropdown.classList.remove('hidden');
+            
+            // Toggle clear button visibility
+            const searchInput = document.getElementById('sale-product-search');
+            const clearBtn = document.getElementById('sale-product-clear');
+            if (searchInput.value.trim() !== '') {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+            
             populateProductDropdown();
         }
 
@@ -1570,9 +1692,11 @@
             if (!product) return;
             selectedSaleProductId = id;
             document.getElementById('sale-product-search').value = `${product.name} (Stock: ${product.stock})`;
-            document.getElementById('sale-price').value = product.salePrice && product.salePrice > 0 ? product.salePrice : '';
+            // Keep Price/Unit empty for manual filling
+            document.getElementById('sale-price').value = '';
             document.getElementById('sale-qty').value = 1;
             document.getElementById('sale-product-dropdown').classList.add('hidden');
+            document.getElementById('sale-product-clear').classList.remove('hidden');
             calcSaleItemTotal();
         }
 
@@ -1583,20 +1707,6 @@
             const discount = parseFloat(document.getElementById('sale-item-discount').value) || 0;
             const total = Math.max(0, (qty * price) - discount);
             document.getElementById('sale-item-total').value = formatMoney(total);
-            
-            const profitPreview = document.getElementById('sale-profit-preview');
-            const profitSpan = document.getElementById('sale-item-profit');
-            
-            if (productId && qty > 0 && price > 0) {
-                const product = products.find(p => p.id === productId);
-                const purchasePrice = product?.purchasePrice || 0;
-                const profit = total - (purchasePrice * qty);
-                profitPreview.classList.remove('hidden');
-                profitSpan.innerText = showItemProfit ? formatMoney(profit) : '••••••';
-                profitSpan.className = profit >= 0 ? 'font-bold text-green-700' : 'font-bold text-red-600';
-            } else {
-                profitPreview.classList.add('hidden');
-            }
         }
 
         function toggleItemProfitVisibility() {
@@ -1618,13 +1728,63 @@
             if (searchInput) {
                 searchInput.value = '';
             }
+            const clearBtn = document.getElementById('sale-product-clear');
+            if (clearBtn) clearBtn.classList.add('hidden');
             const dropdown = document.getElementById('sale-product-dropdown');
             if (dropdown) dropdown.classList.add('hidden');
             document.getElementById('sale-qty').value = 1;
             document.getElementById('sale-price').value = '';
             document.getElementById('sale-item-discount').value = '0';
             document.getElementById('sale-item-total').value = '';
-            document.getElementById('sale-profit-preview').classList.add('hidden');
+        }
+
+        function updateClearButtonVisibility(inputId, buttonId) {
+            const input = document.getElementById(inputId);
+            const button = document.getElementById(buttonId);
+            if (input && button) {
+                if (input.value.trim() !== '') {
+                    button.classList.remove('hidden');
+                } else {
+                    button.classList.add('hidden');
+                }
+            }
+        }
+
+        function clearTextInput(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            input.value = '';
+            const event = new Event('input', { bubbles: true });
+            input.dispatchEvent(event);
+        }
+
+        // Clear product filter for history sections
+        function clearSalesHistoryProductFilter() {
+            document.getElementById('sales-history-product').value = '';
+            document.getElementById('sales-history-product-search').value = '';
+            document.getElementById('sales-history-product-dropdown').classList.add('hidden');
+            document.getElementById('sales-history-product-clear').classList.add('hidden');
+            renderSalesHistory();
+        }
+
+        function clearPurchaseHistoryProductFilter() {
+            document.getElementById('purchases-history-product').value = '';
+            document.getElementById('purchases-history-product-search').value = '';
+            document.getElementById('purchases-history-product-dropdown').classList.add('hidden');
+            document.getElementById('purchases-history-product-clear').classList.add('hidden');
+            renderPurchases();
+        }
+
+        function clearPurchaseProductSelection() {
+            selectedPurchaseProductId = '';
+            const searchInput = document.getElementById('purchase-product-search');
+            if (searchInput) {
+                searchInput.value = '';
+            }
+            const clearBtn = document.getElementById('purchase-product-clear');
+            if (clearBtn) clearBtn.classList.add('hidden');
+            const dropdown = document.getElementById('purchase-product-dropdown');
+            if (dropdown) dropdown.classList.add('hidden');
         }
 
         function addItemToCart() {
@@ -1697,15 +1857,15 @@
 
         function renderCart() {
             const container = document.getElementById('pos-cart-items');
-            const profitSummary = document.getElementById('pos-profit-summary');
-            const profitSpan = document.getElementById('pos-cart-profit');
-            const profitHidden = document.getElementById('pos-cart-profit-hidden');
             
             if (cart.length === 0) {
                 container.innerHTML = '<p class="text-center text-gray-400 mt-10">Cart is empty</p>';
                 document.getElementById('pos-subtotal').innerText = 'PKR 0';
                 document.getElementById('pos-total').innerText = 'PKR 0';
-                profitSummary.style.display = 'none';
+                // Don't hide profit toggle if last sale profit exists (after checkout)
+                if (!window.lastSaleProfit) {
+                    document.getElementById('pos-profit-toggle-container').classList.add('hidden');
+                }
                 return;
             }
 
@@ -1749,29 +1909,24 @@
             document.getElementById('pos-subtotal').innerText = formatMoney(subtotal);
             document.getElementById('pos-total').innerText = formatMoney(total);
             
-            profitSummary.style.display = 'block';
-            if (showProfit) {
-                profitSpan.innerText = formatMoney(totalProfit);
-                profitSpan.className = totalProfit >= 0 ? 'font-bold text-green-700 text-sm' : 'font-bold text-red-600 text-sm';
-                profitSpan.classList.remove('hidden');
-                profitHidden.classList.add('hidden');
-            } else {
-                profitSpan.classList.add('hidden');
-                profitHidden.classList.remove('hidden');
-            }
+            // Store profit for secret display (only shown after checkout via toggle)
+            window.lastSaleProfit = totalProfit;
+            // Keep profit toggle hidden until after sale is complete
         }
 
         function toggleProfitVisibility() {
             showProfit = !showProfit;
-            const icon = document.getElementById('profit-toggle-icon');
+            const profitText = document.getElementById('profit-toggle-text');
+            const profitAmount = document.getElementById('last-sale-profit');
+            
             if (showProfit) {
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+                profitText.innerText = '🔓 Sale Profit (Private)';
+                profitAmount.classList.remove('hidden');
+                profitAmount.innerText = formatMoney(window.lastSaleProfit || 0);
             } else {
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
+                profitText.innerText = '🔒 Show Sale Profit (Private)';
+                profitAmount.classList.add('hidden');
             }
-            renderCart();
         }
 
         function updateQty(index, change) {
@@ -1835,6 +1990,17 @@
 
             transactions.push(sale);
 
+            // Store profit for secret display
+            window.lastSaleProfit = profit;
+            
+            // Show secret profit toggle after successful checkout
+            const profitToggle = document.getElementById('pos-profit-toggle-container');
+            profitToggle.classList.remove('hidden');
+            document.getElementById('last-sale-profit').innerText = formatMoney(profit);
+            showProfit = false; // Reset to hidden state
+            document.getElementById('profit-toggle-text').innerText = '🔒 Show Sale Profit (Private)';
+            document.getElementById('last-sale-profit').classList.add('hidden');
+
             saveData();
             cart = [];
             document.getElementById('pos-discount').value = 0;
@@ -1850,6 +2016,8 @@
             document.getElementById('sales-history-product-search').value = '';
             document.getElementById('sales-history-from').value = '';
             document.getElementById('sales-history-to').value = '';
+            document.getElementById('sales-select-all').checked = false;
+            updateSelectionCount('sales');
             renderSalesHistory();
         }
 
@@ -1893,6 +2061,9 @@
             
             tbody.innerHTML = results.length ? results.map(t => `
                 <tr class="bg-white border-b hover:bg-gray-50">
+                    <td class="px-4 py-3 w-10 text-center">
+                        <input type="checkbox" class="sales-checkbox w-4 h-4 rounded" value="${t.id}" onchange="updateSelectionCount('sales')">
+                    </td>
                     <td class="px-4 py-3 text-sm whitespace-nowrap">${formatDateTime(t.date)}</td>
                     <td class="px-4 py-3 font-medium">${t.customerName}</td>
                     <td class="px-4 py-3 text-sm">${t.items.map(i => i.name + ' x' + i.qty).join(', ')}</td>
@@ -1904,7 +2075,7 @@
                         <button onclick="deleteTransaction('${t.id}')" class="text-red-600 hover:text-red-900" title="Delete"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
-            `).join('') : '<tr><td colspan="6" class="p-4 text-center text-gray-500">No matching sales found</td></tr>';
+            `).join('') : '<tr><td colspan="7" class="p-4 text-center text-gray-500">No matching sales found</td></tr>';
         }
 
         function getInvoiceHTML(sale) {
@@ -2020,8 +2191,19 @@
 
         function filterPurchaseProductDropdown() {
             const dropdown = document.getElementById('purchase-product-dropdown');
+            const searchInput = document.getElementById('purchase-product-search');
+            const clearBtn = document.getElementById('purchase-product-clear');
+            
             if (!dropdown) return;
             dropdown.classList.remove('hidden');
+            
+            // Show clear button when typing
+            if (searchInput.value.trim() !== '') {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+            
             populatePurchaseProductDropdown();
         }
 
@@ -2031,6 +2213,7 @@
             selectedPurchaseProductId = id;
             document.getElementById('purchase-product-search').value = `${product.name} (Stock: ${product.stock})`;
             document.getElementById('purchase-product-dropdown').classList.add('hidden');
+            document.getElementById('purchase-product-clear').classList.remove('hidden');
         }
 
         function resetPurchaseFilters() {
@@ -2039,6 +2222,8 @@
             document.getElementById('purchases-history-product-search').value = '';
             document.getElementById('purchases-history-from').value = '';
             document.getElementById('purchases-history-to').value = '';
+            document.getElementById('purchases-select-all').checked = false;
+            updateSelectionCount('purchases');
             renderPurchases();
         }
 
@@ -2083,6 +2268,9 @@
                 const pName = products.find(p => p.id === t.productId)?.name || 'Deleted Product';
                 return `
                 <tr class="bg-white border-b hover:bg-gray-50">
+                    <td class="px-4 py-3 w-10 text-center">
+                        <input type="checkbox" class="purchases-checkbox w-4 h-4 rounded" value="${t.id}" onchange="updateSelectionCount('purchases')">
+                    </td>
                     <td class="px-4 py-3 whitespace-nowrap">${formatDate(t.date)}</td>
                     <td class="px-4 py-3 font-medium">${pName}</td>
                     <td class="px-4 py-3">${t.supplierName || '-'}</td>
@@ -2193,6 +2381,9 @@
             
             tbody.innerHTML = results.length ? results.map(t => `
                 <tr class="bg-white border-b hover:bg-gray-50">
+                    <td class="px-4 py-3 w-10 text-center">
+                        <input type="checkbox" class="expenses-checkbox w-4 h-4 rounded" value="${t.id}" onchange="updateSelectionCount('expenses')">
+                    </td>
                     <td class="px-4 py-3 whitespace-nowrap">${formatDate(t.date)}</td>
                     <td class="px-4 py-3"><span class="px-2 py-1 bg-gray-100 rounded text-xs font-medium">${t.category || 'Misc'}</span></td>
                     <td class="px-4 py-3 font-medium">${t.description || '-'}</td>
@@ -2202,7 +2393,7 @@
                         <button onclick="deleteTransaction('${t.id}')" class="text-red-600 hover:text-red-900" title="Delete"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
-            `).join('') : '<tr><td colspan="5" class="p-4 text-center text-gray-500">No matching expenses found</td></tr>';
+            `).join('') : '<tr><td colspan="6" class="p-4 text-center text-gray-500">No matching expenses found</td></tr>';
         }
 
         document.getElementById('expense-form').addEventListener('submit', (e) => {
@@ -2841,7 +3032,14 @@
         function filterSalesProductDropdown() {
             const searchInput = document.getElementById('sales-history-product-search');
             const dropdown = document.getElementById('sales-history-product-dropdown');
+            const clearBtn = document.getElementById('sales-history-product-clear');
             const term = searchInput.value.toLowerCase();
+            
+            if (searchInput.value.trim() !== '') {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
             
             const filtered = products.filter(p => p.name.toLowerCase().includes(term));
             
@@ -2887,13 +3085,21 @@
             document.getElementById('sales-history-product').value = id;
             document.getElementById('sales-history-product-search').value = name;
             document.getElementById('sales-history-product-dropdown').classList.add('hidden');
+            document.getElementById('sales-history-product-clear').classList.remove('hidden');
             renderSalesHistory();
         }
 
         function filterPurchaseProductDropdownForHistory() {
             const searchInput = document.getElementById('purchases-history-product-search');
             const dropdown = document.getElementById('purchases-history-product-dropdown');
+            const clearBtn = document.getElementById('purchases-history-product-clear');
             const term = searchInput.value.toLowerCase();
+            
+            if (searchInput.value.trim() !== '') {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
             
             const filtered = products.filter(p => p.name.toLowerCase().includes(term));
             
@@ -2938,6 +3144,7 @@
             document.getElementById('purchases-history-product').value = id;
             document.getElementById('purchases-history-product-search').value = name;
             document.getElementById('purchases-history-product-dropdown').classList.add('hidden');
+            document.getElementById('purchases-history-product-clear').classList.remove('hidden');
             renderPurchases();
         }
 
@@ -2961,6 +3168,117 @@
             document.getElementById('purchases-history-product-search').value = name;
             document.getElementById('purchases-history-product-dropdown').classList.add('hidden');
             renderPurchases();
+        }
+
+        // --- CHECKBOX SELECTION & BULK OPERATIONS ---
+        
+        function updateSelectionCount(section) {
+            const checkboxes = document.querySelectorAll(`.${section}-checkbox`);
+            const count = document.querySelectorAll(`.${section}-checkbox:checked`).length;
+            document.getElementById(`${section}-selected-count`).innerText = `${count} selected`;
+            
+            const deleteBtn = document.getElementById(`${section}-delete-selected`);
+            const exportBtn = document.getElementById(`${section}-export-selected`);
+            
+            if (count > 0) {
+                deleteBtn.disabled = false;
+                exportBtn.disabled = false;
+            } else {
+                deleteBtn.disabled = true;
+                exportBtn.disabled = true;
+            }
+        }
+        
+        function toggleSelectAll(section) {
+            const selectAll = document.getElementById(`${section}-select-all`);
+            const checkboxes = document.querySelectorAll(`.${section}-checkbox`);
+            checkboxes.forEach(cb => {
+                cb.checked = selectAll.checked;
+            });
+            updateSelectionCount(section);
+        }
+
+        function deselectAll(section) {
+            const selectAll = document.getElementById(`${section}-select-all`);
+            const checkboxes = document.querySelectorAll(`.${section}-checkbox`);
+            
+            // Uncheck all checkboxes
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+            });
+            
+            // Also uncheck the "Select All" header checkbox
+            if (selectAll) {
+                selectAll.checked = false;
+            }
+            
+            // Update selection count
+            updateSelectionCount(section);
+        }
+        
+        function getSelectedIds(section) {
+            const checkboxes = document.querySelectorAll(`.${section}-checkbox:checked`);
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+        
+        function deleteSelected(section) {
+            const selectedIds = getSelectedIds(section);
+            if (selectedIds.length === 0) return alert('Please select at least one entry to delete.');
+            
+            if (!confirm(`Are you sure you want to delete ${selectedIds.length} selected ${section.slice(0, -1)} entries? This action cannot be undone.`)) return;
+            
+            // Adjust stock for sales and purchases before deletion
+            selectedIds.forEach(id => {
+                const t = transactions.find(x => x.id === id);
+                if (t.type === 'purchase') {
+                    const pIdx = products.findIndex(p => p.id === t.productId);
+                    if (pIdx > -1) products[pIdx].stock -= t.qty;
+                }
+                if (t.type === 'sale') {
+                    t.items.forEach(item => {
+                        const pIdx = products.findIndex(p => p.id === item.productId);
+                        if (pIdx > -1) products[pIdx].stock += item.qty;
+                    });
+                }
+            });
+            
+            // Remove transactions
+            transactions = transactions.filter(x => !selectedIds.includes(x.id));
+            
+            saveData();
+            
+            // Refresh UI
+            if (section === 'sales') renderPOS();
+            if (section === 'purchases') renderPurchases();
+            if (section === 'expenses') renderExpenses();
+            
+            // Reset checkboxes
+            document.getElementById(`${section}-select-all`).checked = false;
+            updateSelectionCount(section);
+            
+            alert(`Successfully deleted ${selectedIds.length} entries.`);
+        }
+        
+        function exportSelected(section) {
+            const selectedIds = getSelectedIds(section);
+            if (selectedIds.length === 0) return alert('Please select at least one entry to export.');
+            
+            const selectedTrans = transactions.filter(t => selectedIds.includes(t.id));
+            
+            const data = selectedTrans.map(t => ({
+                Date: formatDate(t.date),
+                Type: t.type.toUpperCase(),
+                Details: t.type === 'sale' ? `${t.customerName || 'Walk-in'} (${t.items?.length || 0} items)` : 
+                       (t.type === 'purchase' ? `${products.find(p => p.id === t.productId)?.name || 'Unknown'} x${t.qty}` : 
+                       (t.description || t.category)),
+                Amount: t.type === 'sale' ? t.total : (t.type === 'expense' ? t.amount : t.totalCost),
+                ID: t.id
+            }));
+            
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Selected Entries");
+            XLSX.writeFile(wb, `DapperGents_${section}_selected_${getTodayDate()}.xlsx`);
         }
 
         // Close dropdowns on outside click
