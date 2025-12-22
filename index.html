@@ -2031,9 +2031,12 @@
             const toDate = document.getElementById('sales-history-to').value;
 
             // History product filter is handled via searchable input + hidden field (no <select> options required)
-            let filteredSales = transactions.filter(t => t.type === 'sale').reverse();
+            let filteredSales = transactions.filter(t => t.type === 'sale');
             
             const hasFilters = searchTerm || selectedProduct || fromDate || toDate;
+
+            // Always sort by date: Newer to Older (Z to A)
+            filteredSales.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             if (searchTerm) {
                 filteredSales = filteredSales.filter(t => 
@@ -2240,9 +2243,12 @@
             const toDate = document.getElementById('purchases-history-to').value;
 
             // History product filter is handled via searchable input + hidden field (no <select> options required)
-            let filteredPurchases = transactions.filter(t => t.type === 'purchase').reverse();
+            let filteredPurchases = transactions.filter(t => t.type === 'purchase');
             
             const hasFilters = searchTerm || selectedProduct || fromDate || toDate;
+
+            // Always sort by date: Newer to Older (Z to A)
+            filteredPurchases.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             if (searchTerm) {
                 filteredPurchases = filteredPurchases.filter(t => (t.supplierName || '').toLowerCase().includes(searchTerm));
@@ -2355,9 +2361,12 @@
                 });
             }
 
-            let filteredExpenses = transactions.filter(t => t.type === 'expense').reverse();
+            let filteredExpenses = transactions.filter(t => t.type === 'expense');
             
             const hasFilters = searchTerm || selectedCat || fromDate || toDate;
+
+            // Always sort by date: Newer to Older (Z to A)
+            filteredExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             if (searchTerm) {
                 filteredExpenses = filteredExpenses.filter(t => (t.description || '').toLowerCase().includes(searchTerm));
